@@ -1,0 +1,88 @@
+<!-- Published Wed Feb  7 23:06:04 2018
+Yadav Murthy, CSE687 - Object Oriented Design, Spring 2017--><!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css">
+<script src = "HideUnhide.js"></script></head>
+<body>
+<h3>DependencyAnalysis.h</h3><hr /><div class="indent"><h4>Dependencies:</h4><a href="DependencyAnalysis.h.htm"><label>DependencyAnalysis.h</label></a>
+<a href="NoSqlDb.h.htm"><label>NoSqlDb.h</label></a>
+</div><hr /><pre>
+#pragma once
+////////////////////////////////////////////////////////////////////////////
+// DependencyAnalysis.h - Construction of dependency table and storing into 
+//						  databse.										    
+//  Language:      Visual C++ 2015										    
+//  Platform:      HP Pavilion x-64, Windows 10							    
+//  Application:   Type-based Dependency Analysis - CSE687 Project2		    
+//  Author:        Yadav Murthy, Syracuse University					    
+//                 (315) 608-1734, ynarayan@syr.edu						    
+//																		    
+////////////////////////////////////////////////////////////////////////////
+/*
+*
+* Manual Information :-
+* ----------------------
+* Package Operations:
+* -------------------
+* This package contains a DependencyAnalysis class.
+* Its purpose is to create a dependency table and store the dependencies
+* in the NoSQL Database created in Project 1. It also supports XML persisting
+* of the stored dependencies.
+*
+* Required Files:
+* ---------------
+* TypeTable.h, NoSqlDb.h, ActionsAndRules.h, Tokenizer.h, XMLPersist.h
+*
+* Build Process:
+* --------------
+* devenv CodeAnalyzerEx.sln /rebuild debug
+*
+* Maintenance History:
+* --------------------
+* ver 1.0 : 19 March, 2017
+* - first release
+*
+*/
+#include &lt;unordered_map&gt;
+#include &lt;set&gt;
+#include &quot;../Parser/ActionsAndRules.h&quot;
+#include &quot;../TypeTable/TypeTable.h&quot;
+#include &quot;../NoSqlDb/NoSqlDb.h&quot;
+#include &quot;../Tokenizer/Tokenizer.h&quot;
+#include &quot;../XmlPersist/XmlPersist.h&quot;
+#include &quot;../Publisher/Publisher.h&quot;
+
+using namespace Scanner;
+using namespace CodeAnalysis;
+using StrData = std::string;
+using firstItem = std::string;
+using secondItem = std::pair&lt;std::string, std::string&gt;;
+using typeTable = std::unordered_map&lt;firstItem, secondItem&gt;;
+using depTable = std::unordered_map&lt;std::string, std::set&lt;std::string&gt;&gt;;
+
+////////////////////////////////////////////////////////////////////////////
+// DependencyAnalysis class													
+// - supports creation of a dependency analysis table						
+// - storing it into the database											
+// - persist the contents into XML format									
+////////////////////////////////////////////////////////////////////////////
+class DependencyAnalysis <button id="Button" onClick="hideUnhideScope('18')">-</button>{<div id="18">
+public:
+	DependencyAnalysis();						// construction
+	depTable&amp; getDepTable();					// getters and setters for dependency table
+	void setDepTable(depTable&amp; depT);
+	int saveToDb(std::string  filespec);		// function to save and show in database
+	int toXmlFile(std::string xml);				// function to write results in an XML file
+	NoSqlDb&lt;std::string&gt;* makeDepAnalTable(TypeTable&amp; x, std::string filespec, std::string cmdArg); // constructing Dependency analysis table
+	void showDepAnalTable(std::string filespec);// displaying Dependency analysis table
+private:
+	depTable depTable_;							// dependencyTable unorderedMap object
+	NoSqlDb&lt;std::string&gt; DB;					// NoSqlDb object
+	Element&lt;StrData&gt; elementObj;				// Element object of NoSqlDb
+	AbstrSynTree&amp; ASTref_;						// Reference of Abstract Syntax tree
+	
+</div>};
+</pre>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!-- Published Wed Feb  7 23:06:04 2018
+Yadav Murthy, CSE687 - Object Oriented Design, Spring 2017--><!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css">
+<script src = "HideUnhide.js"></script></head>
+<body>
+<h3>DependencyAnalysis.cpp</h3><hr /><div class="indent"><h4>Dependencies:</h4><a href="DependencyAnalysis.h.htm"><label>DependencyAnalysis.h</label></a>
+<a href="NoSqlDb.h.htm"><label>NoSqlDb.h</label></a>
+<a href="Publisher.h.htm"><label>Publisher.h</label></a>
+</div><hr /><pre>
+////////////////////////////////////////////////////////////////////////////
+// DependencyAnalysis.cpp - Implementation of DependencyAnalysis.h          
+//  Language:      Visual C++ 2015										    
+//  Platform:      HP Pavilion x-64, Windows 10							    
+//  Application:   Type-based Dependency Analysis - CSE687 Project2		    
+//  Author:        Yadav Murthy, Syracuse University					    
+//                 (315) 608-1734, ynarayan@syr.edu						    
+//																		    
+////////////////////////////////////////////////////////////////////////////
+/*
+*
+* Manual Information :-
+* ----------------------
+* Package Operations:
+* -------------------
+* This package contains the definiotions of functions in DependencyAnalysis class.
+* Its purpose is to create a dependency table and store the dependencies
+* in the NoSQL Database created in Project 1. It also supports XML persisting
+* of the stored dependencies.
+*
+* Required Files:
+* ---------------
+* DpendencyAnalysis.h
+*
+* Build Process:
+* --------------
+* devenv CodeAnalyzerEx.sln /rebuild debug
+*
+* Maintenance History:
+* --------------------
+* ver 1.0 : 19 March, 2017
+* - first release
+*
+*/
+
+#include &quot;DependencyAnalysis.h&quot;
+
+//----&lt; DependencyAnalysis::DependencyAnalysis() function &gt;---------------------------------
+/*
+* Constructing DependencyAnalysis object
+*/
+DependencyAnalysis::DependencyAnalysis() : 
+	ASTref_(Repository::getInstance()-&gt;AST())
+<button id="Button" onClick="hideUnhideScope('1')">-</button>{<div id="1">
+
+</div>}
+
+//----&lt; DependencyAnalysis::getDepTable() function &gt;---------------------------------
+/*
+* Getter function for Dependency Table
+*/
+depTable&amp; DependencyAnalysis::getDepTable() <button id="Button" onClick="hideUnhideScope('2')">-</button>{<div id="2">
+	return depTable_;
+</div>}
+
+//----&lt; DependencyAnalysis::setDepTable() function &gt;---------------------------------
+/*
+* Setter function for Dependency Table
+*/
+void DependencyAnalysis::setDepTable(depTable&amp; depT) <button id="Button" onClick="hideUnhideScope('3')">-</button>{<div id="3">
+	depTable_ = depT;
+</div>}
+
+//----&lt; DependencyAnalysis::saveToDb() function &gt;---------------------------------
+/*
+* Showing the dependencies stored in the NoSQL Database created in Project1.
+*/
+int DependencyAnalysis::saveToDb(std::string key) <button id="Button" onClick="hideUnhideScope('4')">-</button>{<div id="4">
+	if (key != &quot;&quot;) <button id="Button" onClick="hideUnhideScope('5')">-</button>{<div id="5">
+		std::cout &lt;&lt; &quot;\n&quot; &lt;&lt; DB.value(key).show();
+	</div>}
+	return 0;
+</div>}
+
+//----&lt; DependencyAnalysis::toXmlFile() function &gt;---------------------------------
+/*
+* Persisting data to XML File from the database
+*/
+int DependencyAnalysis::toXmlFile(std::string xmlFileName) <button id="Button" onClick="hideUnhideScope('6')">-</button>{<div id="6">
+	std::ofstream myfile;
+
+	myfile.open(xmlFileName);
+	XmlPersist persist;
+	myfile &lt;&lt; persist.toXmlFromDb(DB);
+	myfile.close();
+	return 0;
+</div>}
+
+//----&lt; DependencyAnalysis::makeDepAnalTable() function &gt;---------------------------------
+/*
+* Analyses the dependencies based on the Type information in the TypeTable and creates a dependency table
+*/
+NoSqlDb&lt;std::string&gt;* DependencyAnalysis::makeDepAnalTable(TypeTable&amp; tt, std::string filespec, std::string cmdArg) <button id="Button" onClick="hideUnhideScope('7')">-</button>{<div id="7">
+	if (filespec != &quot;&quot;) <button id="Button" onClick="hideUnhideScope('8')">-</button>{<div id="8">
+		static std::string path = &quot;&quot;;
+		try <button id="Button" onClick="hideUnhideScope('9')">-</button>{<div id="9">
+			std::ifstream in(filespec);
+			if (!in.good())	<button id="Button" onClick="hideUnhideScope('10')">-</button>{<div id="10">
+				std::cout &lt;&lt; &quot;cant open&quot;;
+				return &amp;DB;
+			</div>}
+			else<button id="Button" onClick="hideUnhideScope('11')">-</button>{<div id="11">
+				Toker toker;
+				toker.returnComments();	toker.attach(&amp;in);
+				typeTable my = tt.getTypeTable(); std::set&lt;std::string&gt; temp_set;
+				do	<button id="Button" onClick="hideUnhideScope('12')">-</button>{<div id="12">
+					std::string tok = toker.getTok();
+					for (auto tt : my) <button id="Button" onClick="hideUnhideScope('13')">-</button>{<div id="13">
+						if (tok == tt.first) <button id="Button" onClick="hideUnhideScope('14')">-</button>{<div id="14">
+							temp_set.insert(tt.second.second);
+						</div>}</div>}
+				</div>} while (in.good());
+				elementObj.name = filespec;						// add the element data
+				elementObj.timeDate = elementObj.getTimeDate();
+				elementObj.category = &quot;test file&quot;;
+				elementObj.data = &quot;dependency info&quot;;
+				while (!elementObj.children_.empty())
+					elementObj.children_.pop_back();
+				for (auto iter = temp_set.begin(); iter != temp_set.end(); ++iter)
+					elementObj.children_.push_back(*iter);
+				DB.save(elementObj.name, elementObj);			// saving the element into DataBase
+				depTable_.insert(std::make_pair(filespec, temp_set));
+			</div>}
+			PublishCode pub;		
+			pub.publishCode(depTable_, cmdArg);					// Publishing the dependencies
+			std::cout &lt;&lt; std::endl;
+			showDepAnalTable(filespec);
+			</div>}
+		catch (std::logic_error&amp; ex)
+		<button id="Button" onClick="hideUnhideScope('15')">-</button>{<div id="15">
+			std::cout &lt;&lt; &quot;\n  &quot; &lt;&lt; ex.what();
+		</div>}
+		std::cout &lt;&lt; &quot;\n\n&quot;;	</div>}
+	return &amp;DB;
+</div>}
+
+//----&lt; DependencyAnalysis::showDepAnalTable() function &gt;---------------------------------
+/*
+* Displays the dependency table
+*/
+void DependencyAnalysis::showDepAnalTable(std::string filespec)
+<button id="Button" onClick="hideUnhideScope('16')">-</button>{<div id="16">
+	std::cout &lt;&lt; std::setw(60) &lt;&lt; &quot;-- FILE NAME --&quot; &lt;&lt; std::setw(60) &lt;&lt; &quot;-- DEPENDENCY --&quot; &lt;&lt; std::endl;
+	std::cout &lt;&lt; std::setw(60) &lt;&lt; filespec;
+	for (auto set_it = depTable_[filespec].begin(); set_it != depTable_[filespec].end(); ++set_it) <button id="Button" onClick="hideUnhideScope('17')">-</button>{<div id="17">
+		std::cout &lt;&lt; std::endl;
+		std::cout &lt;&lt; std::setw(80) &lt;&lt; &quot; &quot; &lt;&lt; *set_it &lt;&lt; &quot;\n&quot;;
+	</div>}
+</div>}
+</pre>
+</body>
+</html>

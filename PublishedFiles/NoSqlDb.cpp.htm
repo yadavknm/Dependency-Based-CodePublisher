@@ -1,0 +1,102 @@
+<!-- Published Wed Feb  7 23:06:04 2018
+Yadav Murthy, CSE687 - Object Oriented Design, Spring 2017--><!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css">
+<script src = "HideUnhide.js"></script></head>
+<body>
+<h3>NoSqlDb.cpp</h3><hr /><div class="indent"><h4>Dependencies:</h4><a href="NoSqlDb.h.htm"><label>NoSqlDb.h</label></a>
+</div><hr /><pre>
+////////////////////////////////////////////////////////////////
+// NoSqlDb.cpp - Implementation of Key/Value in memory database 
+// ver 1.0                                                      
+// Yadav Murthy, CSE687 - Object Oriented Design, Spring 2017   
+////////////////////////////////////////////////////////////////
+/*
+* Package Operations:
+* -------------------
+* This package contains implementations of functions from Element&lt;T&gt; class and  NoSqlDb&lt;T&gt; class.
+* Its purpose is to support add,delete and update elements into NoSqlDb.
+* It is implemented using C++11 STL unordered_map
+*
+* Required Files:
+* ---------------
+* NoSqldb.h, Query.h
+*
+* Build Process:
+* --------------
+* devenv Project1.sln /rebuild debug
+*
+* Maintenance History:
+* --------------------
+* ver 1.0 : 13 Feb 2017
+* - first release
+*
+*/
+
+
+#ifdef TEST_NoSqlDb
+
+
+
+#include &quot;NoSqlDb.h&quot;	// including the necessary header files
+#include &quot;Query.h&quot;
+#include &lt;iostream&gt;
+#include &lt;set&gt;
+
+using StrData = std::string;
+using intData = int;
+using Key = NoSqlDb&lt;StrData&gt;::Key;
+using Keys = NoSqlDb&lt;StrData&gt;::Keys;
+
+int main()
+<button id="Button" onClick="hideUnhideScope('19')">-</button>{<div id="19">
+  NoSqlDb&lt;StrData&gt; db;
+  Element&lt;StrData&gt; elem1;
+  elem1.name = &quot;elem1&quot;;
+  elem1.category = &quot;test&quot;;
+  elem1.description = &quot;elem1&apos;s description&quot;;
+  elem1.data = &quot;elem1&apos;s StrData&quot;;
+  elem1.timeDate = elem1.getTimeDate();
+  db.save(elem1.name, elem1);   
+  db.resave(elem2.name, elem2);  db.resave(elem1.name, elem1);  db.resave(elem3.name, elem3);
+  db.deleteElem(elem3.name, elem3);							// deleting an element of a specified key
+  elem2.deleteChild();										// deleyting the children from the Element
+  db.resave(elem2.name,elem2);
+  db.editText(elem1.name, elem1, &quot;NEW TEXT DESCRIPTION&quot;);	//editing the text of an Element
+  elem1 = db.value(&quot;elem1&quot;);
+  db.replaceInstance(elem1.name.getValue(), elem1, elem2);	//replacing the data of an Element
+  elem1 = db.value(&quot;elem1&quot;);
+  elem2 = db.value(&quot;elem2&quot;);
+  std::string xml = db.toXml();		//converting the database contents into XML format
+  std::cout&lt;&lt;&quot;\n&quot;&lt;&lt;db.toXml();
+  XmlParser parser(&quot;../xml1.xml&quot;); //parsing the contents of an XML file into the database
+  XmlDocument* pXmlDoc = parser.buildDocument();
+  std::cout &lt;&lt; pXmlDoc-&gt;toString();
+  db.fromXml(pXmlDoc-&gt;toString());	// augmenting the data from XML file
+  Query&lt;StrData&gt; query;
+  Element&lt;StrData&gt; result1 = query.Query1(db, &quot;elem1&quot;);	// queries the value of a specified key &quot;elem1&quot;
+  std::cout &lt;&lt; result1.show();							// displaying the result of the query
+  Keys result2 = query.Query2(db, &quot;elem1&quot;); // querying the children of &quot;elem1&quot;
+  query.showResult(result2);
+  Keys result3 = query.Query3(db, &quot;elem&quot;);	// returns the keys with a pattern &quot;elem&quot;
+  query.showResult(result3);
+  Keys result4 = query.Query4(db, &quot;elem&quot;);	// returns the keys that contain the pattern &quot;elem&quot; in the item metadata of element
+  query.showResult(result4);
+  Keys result5 = query.Query5(db, &quot;te&quot;);	// returns the keys that contain the pattern &quot;te&quot; in the category metadata of element
+  query.showResult(result5);
+  Keys result6 = query.Query6(db, &quot;Data&quot;);	// returns the keys that contain the pattern &quot;Data&quot; in the data of element
+  query.showResult(result6);
+  Keys result8 = query.queryOnAQuery(db, &quot;em2&quot;, result4); // supporting query on the result of query4
+  query.showResult(result8);
+  std::set&lt;Key&gt; set1(result2.begin(), result2.end()); // result of query2
+  std::set&lt;Key&gt; set2(result3.begin(), result3.end()); // result of query3
+  Keys unionOfQueryResults;
+  std::set_union(set1.begin(), set1.end(), set2.begin(), set2.end(), std::back_inserter(unionOfQueryResults)); // union of result2 and result3
+  Keys result9 = query.queryUnion(db, &quot;lem&quot;, unionOfQueryResults); // performing a query on the union of results
+  query.showResult(result9);
+</div>}
+#endif //TEST_NoSqlDb
+</pre>
+</body>
+</html>

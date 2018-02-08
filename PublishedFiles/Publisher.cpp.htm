@@ -1,0 +1,62 @@
+<!-- Published Wed Feb  7 23:06:04 2018
+Yadav Murthy, CSE687 - Object Oriented Design, Spring 2017--><!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css">
+<script src = "HideUnhide.js"></script></head>
+<body>
+<h3>Publisher.cpp</h3><hr /><div class="indent"><h4>Dependencies:</h4><a href="Publisher.h.htm"><label>Publisher.h</label></a>
+</div><hr /><pre>
+//////////////////////////////////////////////////////////////////////////////
+// Publisher.cpp - Implementation of PublishCode class						  
+//																		      
+//  Language:      Visual C++ 2015										      
+//  Platform:      HP Pavilion x-64, Windows 10							      
+//  Application:   Dependency-Based Code Publisher - CSE687 Project3	      
+//  Author:        Yadav Murthy, Syracuse University					      
+//                 (315) 608-1734, ynarayan@syr.edu						      
+//																		      
+//////////////////////////////////////////////////////////////////////////////
+/*
+*
+* Manual Information :-
+* ----------------------
+* Package Operations:
+* -------------------
+* This package contains the test stub to test functions from PublishCode class.
+*
+* Required Files:
+* ---------------
+* Publisher.h
+*
+* Build Process:
+* --------------
+* devenv CodePublisher.sln /rebuild debug
+*
+* Maintenance History:
+* --------------------
+* ver 1.0 : 19 March, 2017
+* - first release
+*
+*/
+
+#include &quot;Publisher.h&quot;
+
+#ifdef TEST_PUBLISHCODE
+
+int main()		// test stub
+<button id="Button" onClick="hideUnhideScope('38')">-</button>{<div id="38">
+	std::unordered_map&lt;std::string, std::set&lt;std::string&gt;&gt; depTab;
+	std::string cmdArg = &quot;dummyArg&quot;;
+	std::string trialEncode = &quot;&lt;std::cout&gt;&quot;;
+	PublishCode publisher;
+
+	publisher.publishCode(depTab, cmdArg);
+	publisher.encodeHTMLTags(trialEncode);
+	return 0;
+</div>}
+
+#endif // TEST_PUBLISHCODE
+</pre>
+</body>
+</html>

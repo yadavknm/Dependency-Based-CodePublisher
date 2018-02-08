@@ -1,0 +1,154 @@
+<!-- Published Wed Feb  7 23:06:04 2018
+Yadav Murthy, CSE687 - Object Oriented Design, Spring 2017--><!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css">
+<script src = "HideUnhide.js"></script></head>
+<body>
+<h3>Publisher.h</h3><hr /><div class="indent"><h4>Dependencies:</h4><a href="Publisher.h.htm"><label>Publisher.h</label></a>
+</div><hr /><pre>
+#pragma once
+////////////////////////////////////////////////////////////////////////////
+// Publisher.h  -  Publishes the source code files						    
+//  Language:      Visual C++ 2015										    
+//  Platform:      HP Pavilion x-64, Windows 10							    
+//  Application:   Dependency-Based Code Publisher - CSE687 Project3		
+//  Author:        Yadav Murthy, Syracuse University					    
+//                 (315) 608-1734, ynarayan@syr.edu						    
+//																		    
+////////////////////////////////////////////////////////////////////////////
+/*
+*
+* Manual Information :-
+* ----------------------
+* Package Operations:
+* -------------------
+* This package contains a PublishCode class.
+* Its purpose is to publish source code files (*.h and *.cpp) as .htm files
+* This package also supports encoding of the source code files into web pages
+*
+* Required Files:
+* ---------------
+* FileSystem.h, DependencyAnalysis.h
+*
+* Build Process:
+* --------------
+* devenv CodePublisher.sln /rebuild debug
+*
+* Maintenance History:
+* --------------------
+* ver 1.0 : 19 March, 2017
+* - first release
+*
+*/
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &quot;../DependencyAnalysis/DependencyAnalysis.h&quot;
+#include &quot;../FileSystem/FileSystem.h&quot;
+
+using depTable = std::unordered_map&lt;std::string, std::set&lt;std::string&gt;&gt;;
+using namespace std;
+
+////////////////////////////////////////////////////////////////////////////
+// PublishCode class														
+// - supports publishing of source code files								
+// - encoding source code files into web readable format for publishing		
+// - random ID generation for creating random IDs to support outlining		
+////////////////////////////////////////////////////////////////////////////
+class PublishCode <button id="Button" onClick="hideUnhideScope('39')">-</button>{<div id="39">
+public:
+	 void publishCode(depTable depTable_, std::string cmdArg);		// function to publish code
+	 void encodeHTMLTags(std::string&amp; data);						// function to escape HTML tags in source code files
+	 string randomIDGen();											// function to generate random ID used to assign for &lt;div&gt; tags
+private:
+	int count = 0;
+</div>};
+
+//----&lt; PublishCode::publishCode() function &gt;---------------------------------
+/*
+* Publishes the source code files as web pages
+*/
+inline void PublishCode::publishCode(depTable depTable_, std::string cmdArg)
+<button id="Button" onClick="hideUnhideScope('40')">-</button>{<div id="40">
+	string targetPath = &quot;../PublishedFiles/&quot;;
+	ofstream indexPage(targetPath + cmdArg);
+	for (auto it = depTable_.begin(); it != depTable_.end(); ++it) <button id="Button" onClick="hideUnhideScope('41')">-</button>{<div id="41">
+		string fileName = FileSystem::Path::getName(it-&gt;first);
+		string line;
+		ifstream myfileIn(it-&gt;first);	
+		string fileNameHTM = targetPath + fileName + &quot;.htm&quot;;
+		ofstream myfileOut(fileNameHTM);
+		myfileOut &lt;&lt; &quot;&lt;!DOCTYPE html&gt;\n&quot;;
+		myfileOut &lt;&lt; &quot;&lt;html&gt;\n&lt;head&gt;\n&lt;link rel=\&quot;stylesheet\&quot; href=\&quot;styles.css\&quot;&gt;\n&quot;;
+		myfileOut &lt;&lt; &quot;&lt;script src = \&quot;HideUnhide.js\&quot;&gt;&quot;;
+		myfileOut &lt;&lt; &quot;&lt;/script&gt;&quot;;
+		myfileOut &lt;&lt; &quot;&lt;/head&gt;\n&quot;;
+		myfileOut &lt;&lt; &quot;&lt;body&gt;\n&quot;;
+		myfileOut &lt;&lt; &quot;&lt;h3&gt;&quot;;
+		myfileOut &lt;&lt; FileSystem::Path::getName(it-&gt;first);
+		myfileOut &lt;&lt; &quot;&lt;/h3&gt;&lt;hr /&gt;&quot;;
+		myfileOut &lt;&lt; &quot;&lt;div class=\&quot;indent\&quot;&gt;&lt;h4&gt;Dependencies:&lt;/h4&gt;&quot;;
+		for (auto dep : it-&gt;second) <button id="Button" onClick="hideUnhideScope('42')">-</button>{<div id="42">
+			string depHTM = dep + &quot;.htm&quot;;
+			myfileOut &lt;&lt; &quot;&lt;a href=\&quot;&quot; &lt;&lt; FileSystem::Path::getName(depHTM) &lt;&lt; &quot;\&quot;&gt;&quot;&lt;&lt; &quot;&lt;label&gt;&quot; &lt;&lt; FileSystem::Path::getName(dep) &lt;&lt; &quot;&lt;/label&gt;&quot; &lt;&lt; &quot;&lt;/a&gt;&quot; &lt;&lt; &quot;\n&quot;;
+		</div>}
+		myfileOut &lt;&lt; &quot;&lt;/div&gt;&lt;hr /&gt;&quot;;
+		myfileOut &lt;&lt; &quot;&lt;pre&gt;\n&quot;;
+		indexPage &lt;&lt; &quot;&lt;a href=\&quot;&quot; &lt;&lt; fileNameHTM &lt;&lt; &quot;\&quot;&gt;&quot; &lt;&lt; fileNameHTM &lt;&lt; &quot;&lt;/a&gt;&quot; &lt;&lt; &quot;&lt;br /&gt;&quot;;
+		if (myfileIn.is_open())
+		<button id="Button" onClick="hideUnhideScope('43')">-</button>{<div id="43">
+			while (getline(myfileIn, line))
+			<button id="Button" onClick="hideUnhideScope('44')">-</button>{<div id="44">
+				encodeHTMLTags(line);
+				myfileOut &lt;&lt; line &lt;&lt; &apos;\n&apos;;
+			</div>}
+			myfileIn.close();
+		</div>}
+		else cout &lt;&lt; &quot;Unable to open file&quot;;
+		myfileOut &lt;&lt; &quot;&lt;/pre&gt;\n&quot;;
+		myfileOut &lt;&lt; &quot;&lt;/body&gt;\n&lt;/html&gt;\n&quot;;
+		if (myfileOut.is_open())
+		<button id="Button" onClick="hideUnhideScope('45')">-</button>{<div id="45">
+			myfileOut.close();
+		</div>}
+	</div>}
+</div>}
+
+//----&lt; PublishCode::encodeHTMLTags() function &gt;---------------------------------
+/*
+* encodes the source code files with HTML tags to make it web readable
+*/
+inline void PublishCode::encodeHTMLTags(std::string&amp; data) <button id="Button" onClick="hideUnhideScope('46')">-</button>{<div id="46">
+	std::string buffer;
+	buffer.reserve(data.size());
+	for (size_t pos = 0; pos != data.size(); ++pos) <button id="Button" onClick="hideUnhideScope('47')">-</button>{<div id="47">
+		switch (data[pos]) <button id="Button" onClick="hideUnhideScope('48')">-</button>{<div id="48">
+		case &apos;&amp;&apos;:  buffer.append(&quot;&amp;amp;&quot;);       break;
+		case &apos;\&quot;&apos;: buffer.append(&quot;&amp;quot;&quot;);      break;
+		case &apos;\&apos;&apos;: buffer.append(&quot;&amp;apos;&quot;);      break;
+		case &apos;&lt;&apos;:  buffer.append(&quot;&amp;lt;&quot;);        break;
+		case &apos;&gt;&apos;:  buffer.append(&quot;&amp;gt;&quot;);        break;
+		case &apos;<button id="Button" onClick="hideUnhideScope('49')">-</button>{<div id="49">&apos;: <button id="Button" onClick="hideUnhideScope('50')">-</button>{<div id="50">
+			string randomID = randomIDGen();
+			buffer.append(&quot;&lt;button id=\&quot;Button\&quot; onClick=\&quot;hideUnhideScope(&apos;&quot; + randomID + &quot;&apos;)\&quot;&gt;&quot; + &quot;-&quot; + &quot;&lt;/button&gt;<button id="Button" onClick="hideUnhideScope('51')">-</button>{<div id="51">&quot;);
+			buffer.append(&quot;&lt;div id=\&quot;&quot; + randomID + &quot;\&quot;&gt;&quot;);
+		</div>}										break;
+		case &apos;</div>}&apos;: buffer.append(&quot;&lt;/div&gt;</div>}&quot;);		break;
+		default:   buffer.append(&amp;data[pos], 1); break;
+		</div>}
+	</div>}
+	data.swap(buffer);
+</div>}
+
+//----&lt; PublishCode::randomIDGen() function &gt;---------------------------------
+/*
+* Generates a random ID to be assigned to &lt;div&gt; tags to support outlining feature
+*/
+inline string PublishCode::randomIDGen() <button id="Button" onClick="hideUnhideScope('52')">-</button>{<div id="52">
+	count++;
+	std::string s = std::to_string(count);
+	return s;
+</div>}
+</pre>
+</body>
+</html>

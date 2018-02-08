@@ -1,0 +1,254 @@
+<!-- Published Wed Feb  7 23:06:04 2018
+Yadav Murthy, CSE687 - Object Oriented Design, Spring 2017--><!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="styles.css">
+<script src = "HideUnhide.js"></script></head>
+<body>
+<h3>NoSqlDb.h</h3><hr /><div class="indent"><h4>Dependencies:</h4><a href="NoSqlDb.h.htm"><label>NoSqlDb.h</label></a>
+</div><hr /><pre>
+////////////////////////////////////////////////////////////////
+ // NoSqlDb.h - Key/Value in memory database                   
+ // ver 1.0                                                    
+ // Yadav Murthy, CSE687 - Object Oriented Design, Spring 2017 
+ //////////////////////////////////////////////////////////////
+ /*
+ * Package Operations:
+ * -------------------
+ * This package contains an Element&lt;T&gt; class and a NoSqlDb&lt;T&gt; class.
+ * Its purpose is to support add,delete and update elements into NoSqlDb.
+ * It is implemented using C++11 STL unordered_map
+ *
+ * Required Files:
+ * ---------------
+ * XmlDocument.h, XmlElement.h, StrHelper.h, Convert.h
+ *
+ * Build Process:
+ * --------------
+ * devenv Project1.sln /rebuild debug
+ *
+ * Maintenance History:
+ * --------------------
+ * ver 1.0 : 13 Feb 2017
+ * - first release
+ *
+ */
+#pragma once
+#pragma warning(disable : 4996) 
+
+#include &lt;unordered_map&gt;					// including the necessary inbuilt header files
+#include &lt;string&gt;
+#include &lt;sstream&gt;
+#include &lt;vector&gt;
+#include &lt;iomanip&gt;
+#include &lt;iostream&gt;
+//#include &quot;../CppProperties/CppProperties.h&quot;	// including the necessary userdefined header files
+#include&quot;../CppProperties/CppProperties.h&quot;
+#include &quot;../StrHelper.h&quot;
+#include &quot;../Convert/Convert.h&quot;
+
+
+/////////////////////////////////////////////////////////////////////
+// Element class represents a data record in our NoSql database
+// - in our NoSql database that is just the value in a key/value pair
+// - it also stores the child data as a vector
+/////////////////////////////////////////////////////////////////////
+template&lt;typename Data&gt;
+class Element
+<button id="Button" onClick="hideUnhideScope('20')">-</button>{<div id="20">
+public:
+	using Name = std::string;
+	using Category = std::string;
+	using Descr = std::string;
+	using TimeDate = std::string;
+
+	Property&lt;Name&gt; name;            // metadata
+	Property&lt;Category&gt; category;    // metadata
+	Property&lt;TimeDate&gt; timeDate;    // metadata
+	Property&lt;Descr&gt; description;	  // metadata
+	Property&lt;Data&gt; data;            // data
+	std::vector&lt;std::string&gt; children_; //metadata
+
+	std::string show();					// function to display Element&apos;s contents
+	std::string getTimeDate();			// function to get the current Date and Time
+	void addChild(const std::string&amp; key);//function to add children to an element
+	void deleteChild();					//function to delete an element
+	std::vector&lt;std::string&gt;&amp; getChildren();//function to retrieve the children of an element
+</div>};
+
+//----&lt; Element&lt;T&gt;::show() function &gt;---------------------------------------------
+/*
+* Function to display the contents of an element
+*/
+template&lt;typename Data&gt;
+std::string Element&lt;Data&gt;::show()
+<button id="Button" onClick="hideUnhideScope('21')">-</button>{<div id="21">
+	std::ostringstream out;
+	out.setf(std::ios::adjustfield, std::ios::left);
+	out &lt;&lt; &quot;\n    &quot; &lt;&lt; std::setw(8) &lt;&lt; &quot;name&quot; &lt;&lt; &quot; : &quot; &lt;&lt; name; // displaying each metadata
+	out &lt;&lt; &quot;\n    &quot; &lt;&lt; std::setw(8) &lt;&lt; &quot;category&quot; &lt;&lt; &quot; : &quot; &lt;&lt; category;
+	out &lt;&lt; &quot;\n    &quot; &lt;&lt; std::setw(8) &lt;&lt; &quot;description&quot; &lt;&lt; &quot; : &quot; &lt;&lt; description;
+	out &lt;&lt; &quot;\n    &quot; &lt;&lt; std::setw(8) &lt;&lt; &quot;timeDate&quot; &lt;&lt; &quot; : &quot; &lt;&lt; timeDate;
+	out &lt;&lt; &quot;\n    &quot; &lt;&lt; std::setw(8) &lt;&lt; &quot;data&quot; &lt;&lt; &quot; : &quot; &lt;&lt; data;
+	if (children_.size() &gt;= 0)		 // displaying the children of the element
+	<button id="Button" onClick="hideUnhideScope('22')">-</button>{<div id="22">
+		out &lt;&lt; &quot;\n    children : &quot;;
+		for (std::string thisKey : children_)
+		<button id="Button" onClick="hideUnhideScope('23')">-</button>{<div id="23">
+			out &lt;&lt; thisKey &lt;&lt; &quot;, &quot;;
+		</div>}
+	</div>}
+	out &lt;&lt; &quot;\n&quot;;
+	return out.str();
+</div>}
+
+
+//----&lt; Element&lt;T&gt;::getTimeDate() function &gt;---------------------------------------------
+/*
+* Function to obtain the current Time and Date
+*/
+template&lt;typename Data&gt;
+std::string Element&lt;Data&gt;::getTimeDate()
+<button id="Button" onClick="hideUnhideScope('24')">-</button>{<div id="24">
+	time_t now = time(0);
+	char * dt = ctime(&amp;now);
+	std::string timeStr = dt;
+	return trim(timeStr);
+</div>}
+
+//----&lt; Element&lt;T&gt;::addChild() function &gt;---------------------------------------------
+/*
+* Function to addChildren to an Element of a specified Key
+*/
+template&lt;typename Data&gt;
+void Element&lt;Data&gt;::addChild(const std::string&amp; key)
+<button id="Button" onClick="hideUnhideScope('25')">-</button>{<div id="25">
+	children_.push_back(key);
+</div>}
+
+//----&lt; Element&lt;T&gt;::deleteChild() function &gt;---------------------------------------------
+/*
+* Function to delete the children from an Element of a specified Key
+*/
+template&lt;typename Data&gt;
+void Element&lt;Data&gt;::deleteChild()
+<button id="Button" onClick="hideUnhideScope('26')">-</button>{<div id="26">
+	children_.clear();
+</div>}
+
+//----&lt; Element&lt;T&gt;::getChildren() function &gt;---------------------------------------------
+/*
+* Function to obtain the children of an Element 
+*/
+template&lt;typename Data&gt;
+std::vector&lt;std::string&gt;&amp; Element&lt;Data&gt;::getChildren()
+<button id="Button" onClick="hideUnhideScope('27')">-</button>{<div id="27">
+	return children_;
+</div>}
+
+/////////////////////////////////////////////////////////////////////
+// NoSqlDb class is a key/value pair in-memory database
+// - stores and retrieves elements
+// - implements toXml and fromXml functions
+/////////////////////////////////////////////////////////////////////
+template&lt;typename Data&gt;
+class NoSqlDb
+<button id="Button" onClick="hideUnhideScope('28')">-</button>{<div id="28">
+public:
+	using Key = std::string;
+	using Keys = std::vector&lt;Key&gt;;
+
+	const int saveAfterCounts = 5;			// counters for autosave, after a certain number of writes
+	int writeCounter = 0;
+	Keys keys();								//function that stores vector of keys	
+	bool save(Key key, Element&lt;Data&gt; elem);	//function to add the element to the database and save it
+	void resave(Key key, Element&lt;Data&gt; elem);	// funvoction to resave the database after a modification to an element
+	void deleteElem(Key key, Element&lt;Data&gt; elem);									// function to delete an element from the database
+	void editText(Key key, Element&lt;Data&gt; elem, std::string newText);				//function to edit the description of an element
+	void replaceInstance(Key key, Element&lt;Data&gt; elem, Element&lt;Data&gt; newElem);		// function to replace an existing value&apos;s instance
+	Element&lt;Data&gt; value(Key key);				// function to return the value of a specified key
+	size_t count();							// returns the size of the database
+//	void fromXmlFile(NoSqlDb&lt;Data&gt;&amp; db, std::string file);
+private:
+	using Item = std::pair&lt;Key, Element&lt;Data&gt;&gt;;
+	std::unordered_map&lt;Key, Element&lt;Data&gt;&gt; store;
+</div>};
+
+//----&lt; NoSqlDb&lt;T&gt;::keys() function &gt;---------------------------------------------
+template&lt;typename Data&gt;
+typename NoSqlDb&lt;Data&gt;::Keys NoSqlDb&lt;Data&gt;::keys()
+<button id="Button" onClick="hideUnhideScope('29')">-</button>{<div id="29">
+	Keys keys;
+	for (Item item : store)
+	<button id="Button" onClick="hideUnhideScope('30')">-</button>{<div id="30">
+		keys.push_back(item.first); // storing the keys in a vector 
+	</div>}
+	return keys;
+</div>}
+
+//----&lt; NoSqlDb&lt;T&gt;::save() function &gt;---------------------------------------------
+template&lt;typename Data&gt;
+bool NoSqlDb&lt;Data&gt;::save(Key key, Element&lt;Data&gt; elem)
+<button id="Button" onClick="hideUnhideScope('31')">-</button>{<div id="31">
+	if (store.find(key) != store.end())
+		return false;
+	store[key] = elem;
+	writeCounter++;
+	// if writeCounter &gt; saveAfterCounts, persist the database contents
+	return true;
+</div>}
+
+//----&lt; NoSqlDb&lt;T&gt;::resave() function &gt;---------------------------------------------
+template&lt;typename Data&gt;
+void NoSqlDb&lt;Data&gt;::resave(Key key, Element&lt;Data&gt; elem)
+<button id="Button" onClick="hideUnhideScope('32')">-</button>{<div id="32">
+	store[key] = elem;
+	writeCounter++;
+	// if writeCounter &gt; saveAfterCounts, persist
+</div>}
+
+//----&lt; NoSqlDb&lt;T&gt;::deleteElem() function &gt;---------------------------------------------
+template&lt;typename Data&gt;
+void NoSqlDb&lt;Data&gt;::deleteElem(Key key, Element&lt;Data&gt; elem)
+<button id="Button" onClick="hideUnhideScope('33')">-</button>{<div id="33">
+	// delete logic
+	store.erase(key);
+</div>}
+
+//----&lt; NoSqlDb&lt;T&gt;::editText() function &gt;---------------------------------------------
+template&lt;typename Data&gt;
+void NoSqlDb&lt;Data&gt;::editText(Key key, Element&lt;Data&gt; elem, std::string newText)
+<button id="Button" onClick="hideUnhideScope('34')">-</button>{<div id="34">
+	elem.description = newText;
+	store[key] = elem;
+</div>}
+
+//----&lt; NoSqlDb&lt;T&gt;::replaceInstance() function &gt;---------------------------------------------
+template&lt;typename Data&gt;
+void NoSqlDb&lt;Data&gt;::replaceInstance(Key key, Element&lt;Data&gt; elem, Element&lt;Data&gt; newElem)
+<button id="Button" onClick="hideUnhideScope('35')">-</button>{<div id="35">
+
+	elem.data = newElem.data;
+	store[key] = elem;
+</div>}
+
+//----&lt; NoSqlDb&lt;T&gt;::value() function &gt;---------------------------------------------
+template&lt;typename Data&gt;
+Element&lt;Data&gt; NoSqlDb&lt;Data&gt;::value(Key key)
+<button id="Button" onClick="hideUnhideScope('36')">-</button>{<div id="36">
+	if (store.find(key) != store.end())
+		return store[key];
+	return Element&lt;Data&gt;();
+</div>}
+
+//----&lt; NoSqlDb&lt;T&gt;::count() function &gt;---------------------------------------------
+template&lt;typename Data&gt;
+size_t NoSqlDb&lt;Data&gt;::count()
+<button id="Button" onClick="hideUnhideScope('37')">-</button>{<div id="37">
+	return store.size();
+</div>}
+
+
+</pre>
+</body>
+</html>
